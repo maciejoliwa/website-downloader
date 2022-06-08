@@ -12,5 +12,6 @@ pom.xml.asc
 .hgignore
 .hg/
 .calva/
+.calva/output-window
 .clj-kondo/
 downloads/

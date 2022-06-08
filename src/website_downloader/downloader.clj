@@ -3,7 +3,6 @@
             [website-downloader.utils :as utils]
             [clj-http.client :as client]
             [clojure.string :as str]
-            [clojure.pprint :as pp]
             [clojure.java.io :as io]))
 
 (defn- create-directory-if-not-exists
