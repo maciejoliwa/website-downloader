@@ -14,16 +14,13 @@
   [^String src-or-href]
   (and (str/starts-with? src-or-href "/") (not (str/starts-with? src-or-href "//"))))
 
-(defn- online-resource?
-  [^String src-or-href]
-  (or (str/starts-with? src-or-href "http") (str/starts-with? src-or-href "//")))
-
 (defn- download-static-resource
   [^String uri ^String path ^String file]
   (let [host (web/host-from-uri-with-protocol uri)
         filename (last (str/split file #"/"))
         concatenated-uri (str "https://" host file)
         save-path (str (str/join "/" path) filename)]
+    (println save-path concatenated-uri)
       (-> save-path clojure.java.io/resource clojure.java.io/file)
       (spit save-path (get (client/get concatenated-uri) :body "")){:original file :new save-path}))
 
