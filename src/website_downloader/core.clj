@@ -6,9 +6,11 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (let [website (first args)
-        download-directory-location (second args)]
-    (if (nil? website)
+  (let [download-directory-location nil
+        websites (filter #(or (not= % "downloads/") (not= download-directory-location %))  args)
+        ]
+    (if (empty? websites)
       (println "Pierwszym argumentem musi być strona internetowa!")
       (if (nil? download-directory-location)
-        (downloader/download-website website) (downloader/download-website website download-directory-location)))))
+        (doseq [website websites] (downloader/download-website website))
+        (doseq [website websites] (downloader/download-website website download-directory-location))))))
