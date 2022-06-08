@@ -9,6 +9,14 @@
   [^String path]
   (.mkdirs (java.io.File. path)))
 
+(defn js-file?
+  [^String f]
+  (str/ends-with? f ".js"))
+
+(defn css-file?
+  [^String f]
+  (str/ends-with? f ".css"))
+
 (defn static-file?
   [^String src-or-href]
   (and (str/starts-with? src-or-href "/") (not (str/starts-with? src-or-href "//"))))
@@ -36,8 +44,8 @@
   [css-and-scripts css-path scripts-path uri]
   (let [converted-css (map #(get-attribute-value % "href") (get css-and-scripts :css))
         converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))
-        static-css (map #(download-static-resource uri css-path % "css") (filter #(and (not (nil? %)) (static-file? %))  converted-css))
-        static-js (map #(download-static-resource uri scripts-path % "scripts") (filter #(and (not (nil? %)) (static-file? %)) converted-js))]
+        static-css (map #(download-static-resource uri css-path % "css") (filter #(and (not (nil? %)) (static-file? %) (css-file? %))  converted-css))
+        static-js (map #(download-static-resource uri scripts-path % "scripts") (filter #(and (not (nil? %)) (static-file? %) (js-file? %)) converted-js))]
     {:css static-css :js static-js}))
 
 (defn download-website
