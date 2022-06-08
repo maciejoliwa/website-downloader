@@ -21,9 +21,8 @@
   [^String uri ^String path ^String file]
   (let [host (web/host-from-uri-with-protocol uri)
         filename (last (str/split file #"/"))
-        
-  ] (println host filename))
-  )
+        concatenated-path (str host file)
+        ] {:original file :new concatenated-path}))
 
 (defn- get-attribute-value
   [^String tag ^String attribute]
@@ -33,10 +32,8 @@
 (defn- download-resources
   [css-and-scripts css-path scripts-path uri]
   (let [converted-css (map #(get-attribute-value % "href") (get css-and-scripts :css))
-        converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))
-        
-        ]
-    
+        converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))]
+
     []))
 
 (defn download-website
@@ -55,6 +52,5 @@
 
      (pp/pprint (download-resources css-and-scripts css-path scripts-path uri))
 
-     (spit (str (str/join "/" path) "/" "index.html") html))
-   )
+     (spit (str (str/join "/" path) "/" "index.html") html)))
   ([^String uri] (download-website uri "downloads")))
