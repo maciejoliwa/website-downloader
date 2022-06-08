@@ -12,5 +12,5 @@
     (if (empty? websites)
       (println "Pierwszym argumentem musi być strona internetowa!")
       (if (nil? download-directory-location)
-        (doseq [website websites] (downloader/download-website website))
-        (doseq [website websites] (downloader/download-website website download-directory-location))))))
+        (doseq [website websites] (future (downloader/download-website website)))
+        (doseq [website websites] (future (downloader/download-website website download-directory-location)))))))
