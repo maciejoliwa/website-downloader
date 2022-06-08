@@ -24,7 +24,7 @@
         contents (client/get concatenated-uri {:throw-exceptions false})]
     (-> save-path clojure.java.io/resource clojure.java.io/file)
     (if (= (get contents :status) 200)
-      (do (spit save-path (get contents :body "")) {:original (str/replace file #"('|rel='stylesheet)" "") :new update-path})
+      (do (spit save-path (get contents :body "")) {:original (str/trim (str/replace file #"('|rel='stylesheet)" "")) :new update-path})
       { :original file :new file }
       )))
 
@@ -60,7 +60,7 @@
      (pp/pprint resources)
 
      (doseq [js (get resources :js)] (swap! html str/replace (get js :original "") (get js :new "")))
-     (doseq [css (get resources :css)] (swap! html str/replace (get css :original "") (get css :new "")))
+     (doseq [css (get resources :css)] (println css) (swap! html str/replace (get css :original "") (get css :new "")))
 
      (spit (str (str/join "/" path) "/" "index.html") @html)))
   ([^String uri] (download-website uri "downloads")))
