@@ -57,7 +57,7 @@
      (def resources (download-resources css-and-scripts css-path scripts-path uri))
 
      (doseq [js (get resources :js)] (swap! html str/replace (get js :original "") (get js :new "")))
-     (doseq [css (get resources :css)] (println css) (swap! html str/replace (get css :original "") (get css :new "")))
+     (doseq [css (get resources :css)] (swap! html str/replace (get css :original "") (get css :new "")))
 
      (spit (str (str/join "/" path) "/" "index.html") @html)))
   ([^String uri] (download-website uri "downloads")))
