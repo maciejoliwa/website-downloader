@@ -1,45 +1,42 @@
-
+clj꞉website-downloader.core꞉> 
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+; Syntax error compiling at (c:\Users\HR-\Desktop\projekty\website-downloader\.calva\output-window\output.calva-repl:2:1).
+; Unable to resolve symbol: download-static-resource in this context
+clj꞉website-downloader.core꞉> 
 #'website-downloader.downloader/download-website
 clj꞉website-downloader.downloader꞉> 
-(download-website "https://www.hardreset.info")
-nil
-clj꞉website-downloader.downloader꞉> 
-#'website-downloader.downloader/download-website
-clj꞉website-downloader.downloader꞉> 
-(download-website "https://www.hardreset.info")
-[()
- (["src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'"
-   "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"]
-  ["src='//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js'"
-   "//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"]
-  ["src='/static/v49ee0bf1/js/bootstrap.min.js'"
-   "/static/v49ee0bf1/js/bootstrap.min.js"]
-  ["src='/static/v49ee0bf1/js/jquery.scrolldepth.min.js'"
-   "/static/v49ee0bf1/js/jquery.scrolldepth.min.js"]
-  ["src='/static/v49ee0bf1/js/selection.js'"
-   "/static/v49ee0bf1/js/selection.js"]
-  ["src='https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=451688524993717'"
-   "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=451688524993717"])]
-nil
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+downloads/bootstrap.min.js
+; Execution error (NullPointerException) at website-downloader.downloader/download-static-resource (form-init4008886376190473534.clj:27).
+; null
 clj꞉website-downloader.downloader꞉> 
 #'website-downloader.downloader/download-website
 clj꞉website-downloader.downloader꞉> 
-(download-website "https://www.hardreset.info")
-[()
- ("//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"
-  "//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
-  "/static/v49ee0bf1/js/bootstrap.min.js"
-  "/static/v49ee0bf1/js/jquery.scrolldepth.min.js"
-  "/static/v49ee0bf1/js/selection.js"
-  "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=451688524993717")]
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+; Execution error (FileNotFoundException) at java.io.FileOutputStream/open0 (REPL:-2).
+; downloads\bootstrap.min.js (The system cannot find the path specified)
+clj꞉website-downloader.downloader꞉> 
+#'website-downloader.downloader/download-website
+clj꞉website-downloader.downloader꞉> 
+#'website-downloader.downloader/download-website
+clj꞉website-downloader.downloader꞉> 
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+no
 nil
 clj꞉website-downloader.downloader꞉> 
-#'website-downloader.website/create-path
-clj꞉website-downloader.website꞉> 
-#'website-downloader.downloader/download-static-resource
-clj꞉website-downloader.downloader꞉> 
-(download-static-resource "https://www.hardreset.info/articles" "/static/sex.js" "")
-www.hardreset.info sex.js
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+no
 nil
 clj꞉website-downloader.downloader꞉> 
-; nREPL Connection was closed
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+no
+nil
+clj꞉website-downloader.downloader꞉> 
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+no
+nil
+clj꞉website-downloader.downloader꞉> 
+(download-static-resource "https://www.hardreset.info" "downloads/" "/static/v49ee0bf1/js/bootstrap.min.js")
+no
+nil
+clj꞉website-downloader.downloader꞉> 

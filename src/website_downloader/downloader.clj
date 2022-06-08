@@ -22,11 +22,10 @@
   [^String uri ^String path ^String file]
   (let [host (web/host-from-uri-with-protocol uri)
         filename (last (str/split file #"/"))
-        concatenated-uri (str host file)
-        save-path (str path filename)
-        ] (
-          (spit save-path (get (client/get concatenated-uri) :body))
-        ) {:original file :new save-path}))
+        concatenated-uri (str "https://" host file)
+        save-path (str (str/join "/" path) filename)]
+      (-> save-path clojure.java.io/resource clojure.java.io/file)
+      (spit save-path (get (client/get concatenated-uri) :body "")){:original file :new save-path}))
 
 (defn- get-attribute-value
   [^String tag ^String attribute]
@@ -36,17 +35,19 @@
 (defn- download-resources
   [css-and-scripts css-path scripts-path uri]
   (let [converted-css (map #(get-attribute-value % "href") (get css-and-scripts :css))
-        converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))]
-
-    []))
+        converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))
+        static-css (map #(download-static-resource uri css-path %) (filter #(and (not (nil? %)) (static-file? %))  converted-css))
+        static-js (map #(download-static-resource uri scripts-path %) (filter #(and (not (nil? %)) (static-file? %)) converted-js))
+        ]
+    { :css static-css :js static-js }))
 
 (defn download-website
   ([^String uri ^String download-directory]
    (let [hostname (web/host-from-uri uri)
-         html (web/get-website-html uri)
+         html (atom (web/get-website-html uri))
          path (conj (web/create-path uri) hostname download-directory)
-         css-and-scripts {:css (web/get-elements "link" html "link='stylesheet'")
-                          :scripts (web/get-elements "script" html "src=")}
+         css-and-scripts {:css (web/get-elements "link" @html "rel='stylesheet'")
+                          :scripts (web/get-elements "script" @html "src=")}
          css-path (utils/add-tail path "css/")
          scripts-path (utils/add-tail path "scripts/")]
 
@@ -54,7 +55,10 @@
      (create-directory-if-not-exists (str/join "/" css-path))
      (create-directory-if-not-exists (str/join "/" scripts-path))
 
-     (pp/pprint (download-resources css-and-scripts css-path scripts-path uri))
+     (def resources (download-resources css-and-scripts css-path scripts-path uri))
 
-     (spit (str (str/join "/" path) "/" "index.html") html)))
+     (doseq [js (get resources :js)] (swap! html str/replace (get js :original "") (get js :new "")))
+     (doseq [css (get resources :css)] (swap! html str/replace (get css :original "") (get css :new "")))
+
+     (spit (str (str/join "/" path) "/" "index.html") @html)))
   ([^String uri] (download-website uri "downloads")))
