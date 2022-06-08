@@ -23,7 +23,6 @@
 
 (defn- download-static-resource
   [^String uri ^String path ^String file ^String script-or-css]
-  (println uri)
   (let [host (web/host-from-uri-with-protocol uri)
         filename  (last (str/split (str/replace file #"('|rel='stylesheet)" "") #"/"))
         concatenated-uri (str "https://" host(str/replace file #"('|rel='stylesheet)" ""))
@@ -31,7 +30,6 @@
         update-path (str/join "/" (drop (.indexOf (str/split save-path #"/") script-or-css) (str/split save-path #"/")))
         contents (client/get concatenated-uri {:throw-exceptions false})]
     (-> save-path clojure.java.io/resource clojure.java.io/file)
-    (println save-path)
     (if (= (get contents :status) 200)
       (do (spit save-path (get contents :body "")) {:original (str/trim (str/replace file #"('|rel='stylesheet)" "")) :new update-path})
       { :original file :new file }
@@ -44,7 +42,6 @@
 
 (defn- download-resources
   [css-and-scripts css-path scripts-path uri]
-  (println css-and-scripts)
   (let [converted-css (map #(get-attribute-value % "href") (get css-and-scripts :css))
         converted-js (map #(str/trim (get-attribute-value % "src")) (get css-and-scripts :scripts))
         static-css (map #(download-static-resource uri css-path % "css") (filter #(and (not (nil? %)) (static-file? %) (css-file? %))  converted-css))
