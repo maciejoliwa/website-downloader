@@ -1,6 +1,7 @@
 (ns website-downloader.downloader
   (:require [website-downloader.website :as web]
             [website-downloader.utils :as utils]
+            [clj-http.client :as client]
             [clojure.string :as str]
             [clojure.pprint :as pp]
             [clojure.java.io :as io]))
@@ -17,12 +18,15 @@
   [^String src-or-href]
   (or (str/starts-with? src-or-href "http") (str/starts-with? src-or-href "//")))
 
-(defn download-static-resource
+(defn- download-static-resource
   [^String uri ^String path ^String file]
   (let [host (web/host-from-uri-with-protocol uri)
         filename (last (str/split file #"/"))
-        concatenated-path (str host file)
-        ] {:original file :new concatenated-path}))
+        concatenated-uri (str host file)
+        save-path (str path filename)
+        ] (
+          (spit save-path (get (client/get concatenated-uri) :body))
+        ) {:original file :new save-path}))
 
 (defn- get-attribute-value
   [^String tag ^String attribute]
