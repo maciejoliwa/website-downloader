@@ -15,7 +15,7 @@
 
 (defn css-file?
   [^String f]
-  (str/ends-with? f ".css"))
+  (str/ends-with? (str/trim (str/replace f #"('|rel='stylesheet)" "")) ".css"))
 
 (defn static-file?
   [^String src-or-href]
@@ -43,7 +43,7 @@
 (defn- download-resources
   [css-and-scripts css-path scripts-path uri]
   (let [converted-css (map #(get-attribute-value % "href") (get css-and-scripts :css))
-        converted-js (map #(get-attribute-value % "src") (get css-and-scripts :scripts))
+        converted-js (map #(str/trim (get-attribute-value % "src")) (get css-and-scripts :scripts))
         static-css (map #(download-static-resource uri css-path % "css") (filter #(and (not (nil? %)) (static-file? %) (css-file? %))  converted-css))
         static-js (map #(download-static-resource uri scripts-path % "scripts") (filter #(and (not (nil? %)) (static-file? %) (js-file? %)) converted-js))]
     {:css static-css :js static-js}))

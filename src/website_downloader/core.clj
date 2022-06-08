@@ -10,7 +10,7 @@
         websites (filter #(or (not= % "downloads/") (not= download-directory-location %))  args)
         ]
     (if (empty? websites)
-      (println "Pierwszym argumentem musi być strona internetowa!")
+      (println "Nie podano żadnych stron do pobrania!")
       (if (nil? download-directory-location)
         (doseq [website websites] (future (downloader/download-website website)))
         (doseq [website websites] (future (downloader/download-website website download-directory-location)))))))
