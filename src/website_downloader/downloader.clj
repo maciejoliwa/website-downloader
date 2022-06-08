@@ -57,8 +57,6 @@
 
      (def resources (download-resources css-and-scripts css-path scripts-path uri))
 
-     (pp/pprint resources)
-
      (doseq [js (get resources :js)] (swap! html str/replace (get js :original "") (get js :new "")))
      (doseq [css (get resources :css)] (println css) (swap! html str/replace (get css :original "") (get css :new "")))
 
