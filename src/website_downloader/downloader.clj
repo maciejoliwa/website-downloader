@@ -10,7 +10,7 @@
   [^String path]
   (.mkdirs (java.io.File. path)))
 
-(defn- static-file?
+(defn static-file?
   [^String src-or-href]
   (and (str/starts-with? src-or-href "/") (not (str/starts-with? src-or-href "//"))))
 
@@ -28,7 +28,7 @@
       { :original file :new file }
       )))
 
-(defn- get-attribute-value
+(defn get-attribute-value
   [^String tag ^String attribute]
   (let [pattern (re-pattern (str attribute "='(.*)'"))
         found (re-find pattern (str/replace tag #"\"" "'"))] (last found)))
