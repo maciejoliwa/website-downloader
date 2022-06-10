@@ -55,14 +55,21 @@
             ] (last retrieved-attribute-value))))
 
 (defn download-image
-  [^String uri ^String download-path]
-  (let [filename (last (str/split uri #"/"))]
-    (with-open [in (io/input-stream uri)
-                out (io/output-stream (str download-path "/" filename))] (io/copy in out))))
+  [^String host ^String uri ^String download-path]
+  (let [full-uri (str "https://" host uri) filename (last (str/split uri #"/"))]
+    (with-open [in (io/input-stream full-uri)
+                out (io/output-stream (str download-path "/" filename))] (io/copy in out)) (str (last (str/split download-path #"/")) "/" filename) ))
 
 (defn download-static-file
   [^String host ^String uri ^String download-path]
-  (let [contents (get-website-content uri)]
-    
-    )
-  )
+  (let [full-uri (str "https://" host uri)
+        contents (get-website-content full-uri)
+        filename (last (str/split uri #"/"))
+        ] 
+    (spit (str download-path filename) contents)(str (last (str/split download-path #"/")) "/" filename)))
+
+(defn create-path
+  [^String uri]
+  (let [name (get-website-domain uri)
+        paths (str/split name #"/")]
+    (filter #(not(str/includes? % name)) paths)))

@@ -1,5 +1,6 @@
 (ns website-downloader.downloader-new
   (:require [clojure.string :as str]
+            [website-downloader.utils :as utils]
             [website-downloader.website-new :as web])
   )
 
@@ -50,3 +51,32 @@
     (if exists?
       (create-directory-if-not-exists (str parent "/" alt) (str alt "1"))
       (do (.mkdirs directory) path))))
+
+(defn download-website
+  [^String uri ^String download-directory]
+  (let [domain (web/get-website-domain uri)
+        host (web/get-website-host uri)
+        html (atom (web/get-website-content uri))
+        resources (get-static-resources @html)
+        save-path (create-directory-if-not-exists (str/join "/" (conj (web/create-path uri) domain download-directory)) "test")
+        css-path (utils/add-tail (str/split save-path #"/") "css/")
+        js-path (utils/add-tail (str/split save-path #"/") "js/")
+        img-path (utils/add-tail (str/split save-path #"/") "img/")]
+
+    (create-directory-if-not-exists (str/join "/" css-path) nil)
+    (create-directory-if-not-exists (str/join "/" js-path) nil)
+    (create-directory-if-not-exists (str/join "/" img-path) nil)
+
+    (let [downloaded-css (map #(zipmap [:original :new] [% (future (web/download-static-file host % (str/join "/" css-path)))]) (get resources :css '()))
+          downloaded-js  (map #(zipmap [:original :new] [% (future (web/download-static-file host % (str/join "/" js-path)))]) (get resources :js '()))
+          downloaded-img  (map #(zipmap [:original :new] [% (future (web/download-image host % (str/join "/" img-path)))]) (get resources :img '()))
+    
+          css-files (map #(zipmap [:original :new] [(get % :original) (deref (get % :new))]) downloaded-css)
+          js-files (map #(zipmap [:original :new] [(get % :original) (deref (get % :new))]) downloaded-js)
+          img-files (map #(zipmap [:original :new] [(get % :original) (deref (get % :new))]) downloaded-img)]
+      
+      (doseq [css css-files] (swap! html str/replace (get css :original) (get css :new)))
+      (doseq [js js-files] (swap! html str/replace (get js :original) (get js :new)))
+      (doseq [img img-files] (swap! html str/replace (get img :original) (get img :new)))
+
+      (spit (str save-path "/" "index.html") @html))))
