@@ -1,6 +1,6 @@
 (ns website-downloader.core
   (:require
-   [website-downloader.downloader :as downloader])
+   [website-downloader.downloader-new :as downloader])
   (:gen-class))
 
 (defn -main
@@ -12,5 +12,5 @@
     (if (empty? websites)
       (println "Nie podano żadnych stron do pobrania!")
       (if (nil? download-directory-location)
-        (doseq [website websites] (future (downloader/download-website website)))
-        (doseq [website websites] (future (downloader/download-website website download-directory-location)))))))
+        (doseq [website websites] (downloader/download-website website "downloads"))
+        (doseq [website websites] (downloader/download-website website "downloads"))))))
