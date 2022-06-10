@@ -50,7 +50,7 @@
         ]
     (if exists?
       (create-directory-if-not-exists (str parent "/" alt) (str alt "1"))
-      (do (.mkdirs directory) path))))
+      (do (.mkdirs directory) path)))) 
 
 (defn download-website
   [^String uri ^String download-directory]
@@ -79,4 +79,4 @@
       (doseq [js js-files] (swap! html str/replace (get js :original) (get js :new)))
       (doseq [img img-files] (swap! html str/replace (get img :original) (get img :new)))
 
-      (spit (str save-path "/" "index.html") @html))))
+      (spit (str save-path "/" "index.html") @html) (System/exit 0) )))
