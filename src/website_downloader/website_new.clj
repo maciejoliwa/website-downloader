@@ -1,7 +1,9 @@
-(ns website-downloader.websitenew
+(ns website-downloader.website-new
   (:require
    [clj-http.client :as client]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [clojure.java.io :as io]
+   ))
 
 (defn get-website-content
   [^String uri]
@@ -41,13 +43,26 @@
   [^String html filters]
   (get-html-elements "link" html filters))
 
+(defn get-images
+  [^String html filters]
+  (get-html-elements "img" html filters))
+
 (defn retrieve-attribute-value
   [^String tag ^String attr]
   (if (nil? attr) nil 
       (let [attribute-value-pattern (re-pattern (str "(?<=" attr "=)'(.*?)'"))
             retrieved-attribute-value (re-find attribute-value-pattern tag)
-            ] (last retrieved-attribute-value) )
-      )
-  )
+            ] (last retrieved-attribute-value))))
 
-  
+(defn download-image
+  [^String uri ^String download-path]
+  (let [filename (last (str/split uri #"/"))]
+    (with-open [in (io/input-stream uri)
+                out (io/output-stream (str download-path "/" filename))] (io/copy in out))))
+
+(defn download-static-file
+  [^String host ^String uri ^String download-path]
+  (let [contents (get-website-content uri)]
+    
+    )
+  )

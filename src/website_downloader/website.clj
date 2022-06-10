@@ -1,5 +1,8 @@
 (ns website-downloader.website
-  (:require [clojure.string :as str] [clj-http.client :as client]))
+  (:require [clojure.string :as str]
+            [clj-http.client :as client]
+            [clojure.java.io :as io]
+            ))
 
 (defn host-from-uri-with-protocol
   [^String uri]
@@ -33,3 +36,4 @@
         host (host-from-uri uri)
         ]
     (filter #(not(str/includes? % host)) paths)))
+
